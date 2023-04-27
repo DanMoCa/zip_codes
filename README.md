@@ -1,17 +1,17 @@
-# API de Codigos Postales de Mexico
+# API de Códigos Postales de Mexico
 
 ***[Freeze Frame - Scratch Record]***
 
-Hola, te preguntaras como llegue aqui, bueno deja te explico como funciona esto 😎 abrocha tu cinturon y preparate para una lectura de 10-15 minutos.
+Hola, te preguntarás como llegue aquí, bueno deja te explico como funciona esto 😎 abrocha tu cinturón y prepárate para una lectura de 10-15 minutos.
 
 ___
 
 ## El problema 🤔💭
 Para el desarrollo de esta API se me presentaron 3 problemas.
 
-- Popular una base de datos con la informacion recopilada por [Correos de México](https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx)
+- Popular una base de datos con la información recopilada por [Correos de México](https://www.correosdemexico.gob.mx/SSLServicios/ConsultaCP/CodigoPostal_Exportar.aspx)
 - Utilizar Laravel Framework (como buen artesano)
-- Crear un endpoint `[GET] /api/zip_codes/{zip_code}` e imprimir la información con la siguiente sintaxis y con tiempos de respuesta ***rapidos***
+- Crear un endpoint `[GET] /api/zip-codes/{zip_code}` e imprimir la información con la siguiente sintaxis y con tiempos de respuesta ***rápidos***
  
 ```php
 {
@@ -28,7 +28,7 @@ Para el desarrollo de esta API se me presentaron 3 problemas.
             "name": "string",
             "zone_type": "string",
             "settlement_type" : {
-                "name": "strng"
+                "name": "string"
             }
         }
     ],
@@ -39,15 +39,16 @@ Para el desarrollo de esta API se me presentaron 3 problemas.
 }
 ```
 
-"Pan comido" me dije a mi mismo... hasta que revise la estructura de los datos fuente...
+"Pan comido" me dije a mí mismo... hasta que revise la estructura de los datos fuente...
 
 ![Oh Dear Lord](https://media.giphy.com/media/3o6Mbh1R3ZApb4sZby/giphy.gif)
 
 ___
 
-## Setup del proyecto
+## Setup del proyecto 💻
 
-Bendito sea Taylor Otwell por darnos Laravel Sail y el instalador a traves de curl, y mas por que mi ambiente de desarrollo es Windows, si no fuera por esta joya estaria desperdiciando mas tiempo con setups de PHP / versions y demas cosas, el futuro con Sail es ahora viejo, XAMPP ya paso de moda.
+Bendito sea Taylor Otwell por darnos Laravel Sail y el instalador a través de curl, y más porque mi ambiente de desarrollo es Windows, si no fuera por esta joya estaría 
+desperdiciando más tiempo con setups de PHP / versions y demás cosas, el futuro con Sail es ahora viejo, XAMPP ya paso de moda.
 
 ```shell
 curl -s https://laravel.build/zip-codes | bash
@@ -55,7 +56,7 @@ cd zip-codes
 ./vendor/bin/sail up -d
 ```
 
-Agregado a eso, y considerando que es una API sencilla, considere usar Laravel Breeze con el setup de API puesto que no se necesita nada de Front para este reto.
+Agregado a eso, y considerando que es una API sencilla, considere usar Laravel Breeze con el setup de API, puesto que no se necesita nada de Front para este reto.
 
 ```shell
 sail artisan breeze:install api
@@ -65,7 +66,7 @@ sail artisan breeze:install api
 
 ## El diseño de la base de datos 👨‍🎨
 
-Veran, por facilidad de impresion o recopilación, o no se que mente maniaca desarrollo esto en correos de méxico, decidio en 3 tipos de archivos
+Verán, por facilidad de impresión o recopilación, o no sé que mente maniaca desarrollo esto en correos de México, decidió en 3 tipos de archivos
 .xml, .xls y .txt... al revisar los 3 archivos opte por el archivo .txt, solo por el hecho de que era un archivo mucho más ligero que los otros dos
 
 ```php
@@ -74,7 +75,7 @@ Veran, por facilidad de impresion o recopilación, o no se que mente maniaca des
     archivo.xml - 61.1 MB
 ```
 
-El siguiente paso fue tratar de hacer match de los campos del archivo fuente con posibles entidades / modelos para un manejo facil (larga vida a las RDBMS) y definir los campos que necesitaria
+El siguiente paso fue tratar de hacer match de los campos del archivo fuente con posibles entidades / modelos para un manejo fácil (larga vida a las RDBMS) y definir los campos que necesitaría
 
 - **FederalEntity**
   * id increments
@@ -100,11 +101,11 @@ El siguiente paso fue tratar de hacer match de los campos del archivo fuente con
   * name string
   * zone_type string
   * settlement_type_id foreignKey refers SettlementType.id
-  * zip_code foreignKey refers zip_codes.zip_code
+  * zip_code foreignKey refers zip-codes.zip_code
 
-Simple cierto? Bueno esa fue mi decision para poder aprovechar el poder que ofrece Laravel con MVC. 
+¿Simple cierto? Bueno esa fue mi decision para poder aprovechar el poder que ofrece Laravel con MVC. 
 
-## Creación del M~~V~~C y setup
+## Creación del M~~V~~C y más setup ⌨
 
 Primero los Modelos junto con sus migraciones y recursos
 
@@ -121,7 +122,7 @@ Modifique cada uno de los modelos con sus respectivos `$fillable`
 ```php
 protected $fillable = ['...'];
 ```
-Sin olvidar el indicar que ningun modelo utilizaria `timestamps`
+Sin olvidar el indicar que ningún modelo utilizaría `timestamps`
 ```php
 protected $timestamps = false;
 ```
@@ -132,7 +133,7 @@ Removiendo el auto incremento al modelo `SettlementType.php`
 protected $incrementing = false;
 ```
 
-Modificando el modelo `ZipCode.php` para resolver de forma explicita el campo a utilizar cuando se busque por el URL parameter del endpoint
+Modificando el modelo `ZipCode.php` para resolver de forma explícita el campo a utilizar cuando se busque por el URL parameter del endpoint
 ```php
 //App/Models/ZipCode.php
 
@@ -164,7 +165,7 @@ Definir las rutas en `api.php` para utilizar los controladores invocables
 // routes/api.php
 
 Route::post('import',ImportController::class)->middleware('auth:sanctum');
-Route::get('zip_codes/{zip_code}',ZipCodeController::class);
+Route::get('zip-codes/{zip_code}',ZipCodeController::class);
 ```
 
 Y modifique el archivo `app/Providers/AppServiceProvider.php` para asegurarme de no usar LazyLoading el momento de desarrollar y eliminar los Wrappings de los recursos.
@@ -179,15 +180,16 @@ public function boot(): void
 }
 ```
 
-Y listo... el setup inicial estaba terminado, seguia lo bueno.
+Y listo... el setup inicial estaba terminado, seguía lo bueno.
 
 ---
 
-## Lectura del archivo fuente
+## Lectura del archivo fuente 📄
 
-Empece con el controlador invocable `ImportController.php` para la importación de mis archivos (pude haber hecho un comando y subir el archivo el proyecto, pero decidi por un controlador y un endpoint para facil mantenimiento de la información fuente)
+Empece con el controlador invocable `ImportController.php` para la importación de mis archivos (pude haber hecho un comando y subir el archivo el proyecto, 
+pero decidí por un controlador y un endpoint para fácil mantenimiento de la información fuente)
 
-Solo resaltare lo mas importante de esta función, el codigo completo lo encontraras [aqui](/app/Http/Controllers/ImportController.php) 
+Solo resaltaré lo más importante de esta función, el código completo lo encontrarás [aquí](/app/Http/Controllers/ImportController.php) 
 
 Primero, validar el archivo de texto para leer los archivos a insertar
 
@@ -197,7 +199,7 @@ $request->validate([
 ]);
 ```
 
-Abrir el archivo de texto y leer los contenidos directamente sin necesidad de guardar el archivo y crear un arreglo con cada una de las lineas del archivo.
+Abrir el archivo de texto y leer los contenidos directamente sin necesidad de guardar el archivo y crear un arreglo con cada una de las líneas del archivo.
 ```php
 $file = $request->file('file');
 
@@ -212,7 +214,7 @@ fclose($handle);
 $lines = explode("\n", iconv("ISO-8859-1", "ASCII//TRANSLIT//IGNORE", $contents));
 ```
 
-Iterar por cada linea e ignorar las primeras dos lineas del archivo, para despues explotarlas en un arreglo.
+Iterar por cada línea e ignorar las primeras dos líneas del archivo, para después explotarlas en un arreglo.
 ```php
 // Set counter variable for line_num
 $line_num = 0;
@@ -236,7 +238,7 @@ foreach($lines as $line){
 }
 ```
 
-Subsecuentemente guarde la información para cada modelo en unos arreglos antes de hacer el insert masivo a la base de datos, si lo hubiera hecho de uno por uno hubiera sido ridiculamente costoso en recursos. Una vez teniendo mis arreglos solo me restaba insertlos por `tantos`
+Subsecuentemente, guarde la información para cada modelo en unos arreglos antes de hacer el insert masivo a la base de datos, si lo hubiera hecho de uno por uno hubiera sido ridículamente costoso en recursos. Una vez teniendo mis arreglos solo me restaba insertarlos por `tantos`
 
 ```php
 // Set batch size
@@ -249,13 +251,13 @@ foreach (array_chunk($settlements, $batchSize) as $chunk) {
     Settlement::insert($chunk);
 }
 ```
-Y voila, con esto ya tenia un controlador y un endpoint que me servirian para actualizar la base de datos de una forma sencilla y practica con un llamado a un endpoint 😎
+Y voila, con esto ya tenía un controlador y un endpoint que me servirían para actualizar la base de datos de una forma sencilla y practica con un llamado a un endpoint 😎
 
 ---
 
-## Retornar la informacion del endpoint
+## Retornar la información del endpoint 👍
 
-Lo ultimo que quedaba por hacer, era la logica del controlador `ZipCodeController.php`, la cual, habiendo hecho todo lo anterior, no era mas que dos lineas de codigo en mi metodo __invoke
+Lo último que quedaba por hacer, era la lógica del controlador `ZipCodeController.php`, la cual, habiendo hecho todo lo anterior, no era más que dos líneas de código en mi método `__invoke`
 
 ```php
 // App/Http/Controllers/ZipCodeController.php
@@ -267,11 +269,25 @@ public function __invoke(ZipCode $zip_code)
 }
 ```
 
-Y asi, el endpoint `[GET] /api/zip_codes/{zip_code}` ya es funcional, cubriendo los puntos del problema.
+Y asi, el endpoint `[GET] /api/zip-codes/{zip_code}` ya es funcional, cubriendo los puntos del problema.
 
-Era hora de las pruebas de velocidad de respuesta!
+¡Era hora de las pruebas de velocidad de respuesta!
 
 ---
-### Resultados
+## Resultados ✅
 
-En Localhost el tiempo promedio de respuesta rondaba entre los `40-60ms`, bastante rapido 😎
+Los tiempos de respuesta promedio fueron
+
+
+- localhost 
+  * tiempo promedio 40-60 MS
+   
+- Droplet de digital ocean 1GB memoria
+  * tiempo promedio 200-400 ms
+
+___
+## Conclusion 🧐
+
+Fue un reto divertido, lo más desafiante fue descifrar la relación entre las columnas del archivo fuente y donde hacer el match con los modelos, pero nada que una noche de cafe en Denny's u el mejor sandwich de brisket no puedan ayudar a resolver (Denny's patrocíname)
+
+Pero el dominio del Framework sin problema alguno 😋

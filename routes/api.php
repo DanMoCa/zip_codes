@@ -21,7 +21,7 @@ use Illuminate\Validation\ValidationException;
 */
 
 Route::post('import',ImportController::class)->middleware('auth:sanctum');
-Route::get('zip_codes/{zip_code}',ZipCodeController::class);
+Route::get('zip-codes/{zip_code}',ZipCodeController::class);
 
 Route::post('/sanctum/token', function (Request $request) {
     $request->validate([
